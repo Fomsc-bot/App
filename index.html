@@ -17,7 +17,9 @@
             --border: rgba(255, 255, 255, 0.08);
             --glass-bg: rgba(255, 255, 255, 0.03);
         }
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+
         body {
             background-color: var(--bg-dark);
             color: var(--text-pri);
@@ -25,188 +27,240 @@
                               radial-gradient(circle at 90% 80%, rgba(176, 110, 247, 0.05) 0%, transparent 40%);
             min-height: 100vh;
         }
-        nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 5%; border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
-        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
         .container { max-width: 1200px; margin: 0 auto; padding: 2rem 5%; }
-        .glass-card { background: var(--bg-card); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 24px; padding: 2.5rem; width: 100%; max-width: 450px; text-align: center; margin: 4rem auto; }
-        input { width: 100%; background: var(--glass-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; color: white; margin-bottom: 1rem; font-size: 1rem; }
-        .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 1rem; }
-        .btn-primary { background: var(--accent-cyan); color: #080a0f; }
-        .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            margin: 4rem auto;
+        }
+
+        input {
+            width: 100%;
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--accent-cyan);
+            color: #080a0f;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .btn-download {
+            background: var(--accent-green);
+            color: #080a0f;
+            margin-top: 1rem;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
         #dashboard { display: none; }
-        .stat-banner { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
-        .stat-item { background: var(--bg-card); border: 1px solid var(--border); padding: 1.25rem; border-radius: 16px; text-align: center; }
-        .stat-val { font-size: 1.5rem; font-weight: 700; color: var(--accent-cyan); }
-        .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
-        .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
-        .panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; }
+
+        .stat-banner {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1.25rem;
+            border-radius: 16px;
+            text-align: center;
+        }
+
+        .stat-val {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
         .badge-paid { color: var(--accent-green); border: 1px solid var(--accent-green); padding: 2px 8px; border-radius: 100px; font-size: 0.7rem; }
         .badge-free { color: var(--accent-purple); border: 1px solid var(--accent-purple); padding: 2px 8px; border-radius: 100px; font-size: 0.7rem; }
-        @media (max-width: 768px) { .dashboard-grid, .stat-banner { grid-template-columns: 1fr; } }
+
+        @media (max-width: 768px) {
+            .dashboard-grid, .stat-banner {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
+
 <body>
-    <nav>
-        <div class="logo">FB AUTOPOST <span style="font-weight: 300;">PRO</span></div>
-        <div id="user-info" style="font-size: 0.9rem; color: var(--text-muted);"></div>
-    </nav>
 
-    <div class="container">
-        <!-- Login Section -->
-        <section id="auth-section">
-            <div class="glass-card">
-                <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">SaaS Dashboard</h1>
-                <p style="color: var(--text-muted); margin-bottom: 2rem;">Log in to manage your worker cloud</p>
-                <input type="email" id="email-input" placeholder="Enter your email" required>
-                <button class="btn btn-primary" onclick="login()">Access Dashboard</button>
-            </div>
-        </section>
+<nav>
+    <div class="logo">FB AUTOPOST PRO</div>
+    <div id="user-info"></div>
+</nav>
 
-        <!-- Dashboard Section -->
-        <section id="dashboard">
-            <div class="stat-banner">
-                <div class="stat-item">
-                    <div class="stat-label">Member Status</div>
-                    <div id="status-badge" class="stat-val">--</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Posts Remaining</div>
-                    <div id="posts-left" class="stat-val">--</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-label">Price</div>
-                    <div id="current-price" class="stat-val">--</div>
-                </div>
+<div class="container">
+
+    <!-- LOGIN -->
+    <section id="auth-section">
+        <div class="glass-card">
+            <h1>SaaS Dashboard</h1>
+            <p>Log in to manage your worker cloud</p>
+            <input type="email" id="email-input" placeholder="Enter your email">
+            <button class="btn btn-primary" onclick="login()">Access Dashboard</button>
+        </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section id="dashboard">
+
+        <div class="stat-banner">
+            <div class="stat-item">
+                <div class="stat-label">Member Status</div>
+                <div id="status-badge" class="stat-val"></div>
             </div>
 
-            <div class="dashboard-grid">
-                <div class="panel">
-                    <h2 style="margin-bottom: 1.5rem;">Campaign Configuration</h2>
-                    <label style="font-size: 0.8rem; color: var(--text-muted);">Target Page URL</label>
-                    <input type="text" id="fb-url" value="https://www.facebook.com">
-                    <label style="font-size: 0.8rem; color: var(--text-muted);">Niche</label>
-                    <input type="text" id="niche" placeholder="fashion, beauty...">
-                    <button class="btn btn-primary" id="start-btn" onclick="trigger()">🚀 Start Auto-Worker</button>
-                    <p id="agent-msg" style="margin-top:1rem; font-size:0.8rem; text-align:center; color:var(--accent-cyan);"></p>
-                </div>
-
-                <div class="panel-column">
-                    <div class="panel">
-                        <h3 style="color: var(--accent-cyan); margin-bottom: 1rem;">1. Sync Agent</h3>
-                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">Keep your Local Agent connected to this Cloud URL:</p>
-                        <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px;">
-                            <input type="text" id="api-url-display" readonly style="font-size: 0.7rem; height: 30px; margin-bottom: 5px;">
-                            <button class="btn" onclick="copyAPI()" style="background: var(--accent-purple); color:white; padding: 5px; font-size: 0.7rem;">Copy URL</button>
-                        </div>
-                    </div>
-
-                    <div class="panel" id="billing-panel" style="display: none; border-color: var(--accent-purple);">
-                        <h3 style="color: var(--accent-purple); margin-bottom: 1rem;">2. Upgrade Required</h3>
-                        <p style="font-size: 0.8rem;">You have reached your 5-post limit. Upgrade to Premium for unlimited access.</p>
-                        <button class="btn" style="background: var(--accent-green); color: #080a0f; margin-top: 1rem;">Upgrade Now</button>
-                    </div>
-
-                    <!-- 👑 ADMIN PANEL -->
-                    <div class="panel" id="admin-card" style="display: none; border: 1px solid var(--accent-cyan);">
-                        <h3 style="color: var(--accent-cyan); margin-bottom: 1rem;">👑 Owner Controls</h3>
-                        <label style="font-size: 0.8rem;">Set Monthly Price ($)</label>
-                        <input type="number" id="new-price" value="10">
-                        <div style="display:flex; align-items:center; gap:10px; margin: 15px 0;">
-                            <input type="checkbox" id="limit-toggle" style="width:auto; margin-bottom:0;">
-                            <label style="font-size:0.8rem;">Activate 5-Post Paywall</label>
-                        </div>
-                        <button class="btn btn-primary" onclick="updatePrice()">Save Global Settings</button>
-                    </div>
-                </div>
+            <div class="stat-item">
+                <div class="stat-label">Posts Remaining</div>
+                <div id="posts-left" class="stat-val"></div>
             </div>
-        </section>
-    </div>
 
-    <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbwHhQxvzbMpx7VfGDF0oL3W0m4MsxQ2fUvw0zfs-Tp5T1kvWxAXYsVoLl3mI9zOWMwkyg/exec";
-        const OWNER = "fernandomsc2002@gmail.com";
-        let currentUser = null;
+            <div class="stat-item">
+                <div class="stat-label">Price</div>
+                <div id="current-price" class="stat-val"></div>
+            </div>
+        </div>
 
-        async function login() {
-            const email = document.getElementById('email-input').value.trim().toLowerCase();
-            if(!email) return alert("Email required");
-            
-            const btn = document.querySelector('#auth-section .btn-primary');
-            btn.innerText = "⏳ Connecting...";
-            btn.disabled = true;
+        <div class="dashboard-grid">
 
-            // RACE LOGIC: Speed first
-            const fetchPromise = fetch(GAS_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain' },
-                body: JSON.stringify({ action: 'getUser', email: email })
-            }).then(r => r.json()).catch(e => null);
+            <!-- LEFT PANEL -->
+            <div class="panel">
+                <h2>Campaign Configuration</h2>
 
-            const timeoutPromise = new Promise(res => setTimeout(() => res('TIMEOUT'), 1500));
-            const result = await Promise.race([fetchPromise, timeoutPromise]);
+                <input type="text" id="fb-url" value="https://www.facebook.com">
+                <input type="text" id="niche" placeholder="fashion, beauty...">
 
-            if (result && result !== 'TIMEOUT') {
-                currentUser = {
-                    email: email,
-                    postCount: parseInt(result.postCount) || 0,
-                    isPaid: result.isPaid === true || email === OWNER,
-                    price: result.price || 10,
-                    limitActive: result.limitActive === true
-                };
-            } else {
-                // Fallback Mode
-                currentUser = { email: email, postCount: 0, isPaid: (email === OWNER), price: 10, limitActive: false };
-            }
-            
-            showDashboard();
-            btn.innerText = "Access Dashboard";
-            btn.disabled = false;
-        }
+                <button class="btn btn-primary" onclick="trigger()">🚀 Start Auto-Worker</button>
 
-        function showDashboard() {
-            document.getElementById('auth-section').style.display = 'none';
-            document.getElementById('dashboard').style.display = 'block';
-            document.getElementById('user-info').innerText = currentUser.email;
+                <!-- 🔥 DOWNLOAD BUTTON -->
+                <a href="https://drive.google.com/uc?export=download&id=1q87BciKpdrPhVuziL3Y0RQJzSy-gqi-I" target="_blank">
+                    <button class="btn btn-download">⬇ Download Agent (.EXE)</button>
+                </a>
 
-            // UI Updates
-            document.getElementById('status-badge').innerHTML = currentUser.isPaid ? 
-                '<span class="badge-paid">PREMIUM</span>' : '<span class="badge-free">FREE TIER</span>';
-            const rem = currentUser.isPaid ? '∞' : Math.max(0, 5 - currentUser.postCount);
-            document.getElementById('posts-left').innerText = rem;
-            document.getElementById('current-price').innerText = `$${currentUser.price}/mo`;
-            document.getElementById('api-url-display').value = GAS_URL;
+                <p id="agent-msg"></p>
+            </div>
 
-            // Admin Visibility
-            if (currentUser.email === OWNER) {
-                document.getElementById('admin-card').style.display = 'block';
-                document.getElementById('new-price').value = currentUser.price;
-                document.getElementById('limit-toggle').checked = currentUser.limitActive;
-            } else {
-                document.getElementById('admin-card').style.display = 'none';
-            }
+            <!-- RIGHT PANEL -->
+            <div class="panel">
+                <h3>Sync Agent</h3>
+                <input type="text" id="api-url-display" readonly>
+                <button class="btn" onclick="copyAPI()">Copy URL</button>
+            </div>
 
-            // Paywall logic
-            if (currentUser.limitActive && !currentUser.isPaid && currentUser.postCount >= 5) {
-                document.getElementById('billing-panel').style.display = 'block';
-                document.getElementById('start-btn').disabled = true;
-                document.getElementById('start-btn').style.opacity = 0.5;
-            } else {
-                document.getElementById('billing-panel').style.display = 'none';
-                document.getElementById('start-btn').disabled = false;
-                document.getElementById('start-btn').style.opacity = 1;
-            }
-        }
+        </div>
 
-        async function updatePrice() {
-            const price = document.getElementById('new-price').value;
-            const active = document.getElementById('limit-toggle').checked;
-            alert("Updating cloud settings...");
-            await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'updateSettings', email: OWNER, price: price, limitActive: active }) });
-            location.reload();
-        }
+    </section>
+</div>
 
-        function trigger() { document.getElementById('agent-msg').innerText = "Cloud signal sent. Open the .EXE Agent on your computer."; }
-        function copyAPI() { const c = document.getElementById("api-url-display"); c.select(); document.execCommand("copy"); alert("Copied!"); }
-    </script>
+<script>
+
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwHhQxvzbMpx7VfGDF0oL3W0m4MsxQ2fUvw0zfs-Tp5T1kvWxAXYsVoLl3mI9zOWMwkyg/exec";
+let currentUser = null;
+
+function login() {
+    const email = document.getElementById('email-input').value;
+    currentUser = { email: email, postCount: 0, isPaid: false, price: 10 };
+
+    document.getElementById('auth-section').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+
+    document.getElementById('user-info').innerText = email;
+    document.getElementById('status-badge').innerText = "FREE";
+    document.getElementById('posts-left').innerText = "5";
+    document.getElementById('current-price').innerText = "$10/mo";
+    document.getElementById('api-url-display').value = GAS_URL;
+}
+
+function trigger() {
+    document.getElementById('agent-msg').innerText = "Open the downloaded EXE to start.";
+}
+
+function copyAPI() {
+    const c = document.getElementById("api-url-display");
+    c.select();
+    document.execCommand("copy");
+    alert("Copied!");
+}
+
+</script>
+
 </body>
 </html>
