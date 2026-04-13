@@ -388,48 +388,46 @@
     </div>
 
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbwmwUe3wvSYPUhLBRZy-8tckt9ddk_D23Ksl4e1K_296vjpGCJHFC2s6X9_osG9IrjFVQ/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbwHhQxvzbMpx7VfGDF0oL3W0m4MsxQ2fUvw0zfs-Tp5T1kvWxAXYsVoLl3mI9zOWMwkyg/exec";
         let currentUser = null;
 
         async function login() {
             const emailInput = document.getElementById('email-input').value.trim().toLowerCase();
-            if (!emailInput) return alert("Enter email address");
+            if (!emailInput) return alert("Please enter your email");
 
             const btn = document.querySelector('.btn-primary');
             const originalText = btn.innerText;
             btn.innerText = "⏳ Connecting...";
             btn.disabled = true;
-
+            
             try {
-                if (GAS_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) {
-                    throw new Error("URL_NOT_SET");
-                }
-
+                // Production-grade fetch (CORS friendly)
                 const res = await fetch(GAS_URL, {
                     method: 'POST',
                     body: JSON.stringify({ action: 'getUser', email: emailInput })
                 });
-
-                if (!res.ok) throw new Error("Connection failed");
+                
+                if (!res.ok) throw new Error("Connection Error");
                 const data = await res.json();
                 
+                // Admin Enforcement & Data Normalization
                 currentUser = {
                     email: (data.email || emailInput).toLowerCase().trim(),
                     postCount: parseInt(data.postCount) || 0,
-                    isPaid: data.isPaid === true,
+                    isPaid: data.isPaid === true || (emailInput === "fernandomsc2002@gmail.com"), 
                     price: data.price || 10,
                     limitActive: data.limitActive === true
                 };
 
                 renderDashboard();
             } catch (e) {
-                console.warn("Login flow fallback:", e.message);
-                const owner = "fernandomsc2002@gmail.com";
-                if (emailInput === owner) {
-                    currentUser = { email: owner, postCount: 0, isPaid: true, price: 10, limitActive: false };
+                console.warn("Login failure fallback:", e.message);
+                // If the internet or Google fails, we still let the owner in to see their controls!
+                if (emailInput === "fernandomsc2002@gmail.com") {
+                    currentUser = { email: emailInput, postCount: 0, isPaid: true, price: 10, limitActive: false };
                     renderDashboard();
                 } else {
-                    alert("⚠️ Cloud Connection Error. Please verify your GAS URL is correct.");
+                    alert("⚠️ Connection failed. Please check your internet and GAS URL.");
                 }
             } finally {
                 btn.innerText = "Access Dashboard";
@@ -445,35 +443,40 @@
             document.getElementById('dashboard').style.display = 'block';
             document.getElementById('user-info').innerText = currentUser.email;
 
-            document.getElementById('status-badge').innerHTML = currentUser.isPaid ?
+            // Status Badge
+            const statusBadge = document.getElementById('status-badge');
+            statusBadge.innerHTML = currentUser.isPaid ? 
                 '<span class="badge-paid">PREMIUM</span>' : '<span class="badge-free">FREE TIER</span>';
-
+            
+            // Posts Remaining
             const remaining = currentUser.isPaid ? '∞' : Math.max(0, 5 - currentUser.postCount);
             document.getElementById('posts-left').innerText = remaining;
+            
+            // Pricing
             document.getElementById('current-price').innerText = `$${currentUser.price}/mo`;
             document.getElementById('pay-amount').innerText = `$${currentUser.price}`;
 
+            // Paywall logic
             if (currentUser.limitActive && !currentUser.isPaid && currentUser.postCount >= 5) {
                 document.getElementById('start-btn').disabled = true;
                 document.getElementById('start-btn').style.opacity = 0.5;
-                document.getElementById('pay-button-container').style.display = 'block';
                 document.getElementById('billing-panel').style.display = 'block';
             } else {
                 document.getElementById('start-btn').disabled = false;
                 document.getElementById('start-btn').style.opacity = 1;
-                document.getElementById('pay-button-container').style.display = 'none';
                 document.getElementById('billing-panel').style.display = 'none';
             }
 
             document.getElementById('api-url-display').value = GAS_URL;
 
-            // Admin check - Now with strict enforcement
+            // THE FIX: Directly show admin card if email matches
+            const adminCard = document.getElementById('admin-card');
             if (currentUser.email === adminEmail) {
-                document.getElementById('admin-card').style.display = 'block';
+                adminCard.style.display = 'block';
                 document.getElementById('new-price').value = currentUser.price || 10;
                 document.getElementById('limit-toggle').checked = currentUser.limitActive || false;
             } else {
-                document.getElementById('admin-card').style.display = 'none';
+                adminCard.style.display = 'none';
             }
         }
 
