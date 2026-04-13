@@ -388,13 +388,12 @@
     </div>
 
     <script>
-        // REPLACE THIS URL WITH YOUR DEPLOYED WEB APP URL
         const GAS_URL = "https://script.google.com/macros/s/AKfycbwmwUe3wvSYPUhLBRZy-8tckt9ddk_D23Ksl4e1K_296vjpGCJHFC2s6X9_osG9IrjFVQ/exec";
         let currentUser = null;
 
         async function login() {
-            const email = document.getElementById('email-input').value;
-            if (!email) return alert("Enter email address");
+            const emailInput = document.getElementById('email-input').value.trim().toLowerCase();
+            if (!emailInput) return alert("Enter email address");
 
             const btn = document.querySelector('.btn-primary');
             const originalText = btn.innerText;
@@ -408,15 +407,14 @@
 
                 const res = await fetch(GAS_URL, {
                     method: 'POST',
-                    body: JSON.stringify({ action: 'getUser', email: email })
+                    body: JSON.stringify({ action: 'getUser', email: emailInput })
                 });
 
                 if (!res.ok) throw new Error("Connection failed");
                 const data = await res.json();
-
-                // DATA SAFETY: Never allow undefined/NaN
+                
                 currentUser = {
-                    email: data.email || email,
+                    email: (data.email || emailInput).toLowerCase().trim(),
                     postCount: parseInt(data.postCount) || 0,
                     isPaid: data.isPaid === true,
                     price: data.price || 10,
@@ -425,21 +423,24 @@
 
                 renderDashboard();
             } catch (e) {
-                console.warn("Using offline mode due to:", e.message);
-                if (email === "fernandomsc2002@gmail.com") {
-                    currentUser = { email: email, postCount: 0, isPaid: true, price: 10, limitActive: false };
+                console.warn("Login flow fallback:", e.message);
+                const owner = "fernandomsc2002@gmail.com";
+                if (emailInput === owner) {
+                    currentUser = { email: owner, postCount: 0, isPaid: true, price: 10, limitActive: false };
                     renderDashboard();
                 } else {
                     alert("⚠️ Cloud Connection Error. Please verify your GAS URL is correct.");
                 }
             } finally {
-                btn.innerText = originalText;
+                btn.innerText = "Access Dashboard";
                 btn.disabled = false;
             }
         }
 
         function renderDashboard() {
-            if (!currentUser) return;
+            if(!currentUser) return;
+            const adminEmail = "fernandomsc2002@gmail.com";
+            
             document.getElementById('auth-section').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
             document.getElementById('user-info').innerText = currentUser.email;
@@ -452,7 +453,6 @@
             document.getElementById('current-price').innerText = `$${currentUser.price}/mo`;
             document.getElementById('pay-amount').innerText = `$${currentUser.price}`;
 
-            // Handle Paywall Visibility
             if (currentUser.limitActive && !currentUser.isPaid && currentUser.postCount >= 5) {
                 document.getElementById('start-btn').disabled = true;
                 document.getElementById('start-btn').style.opacity = 0.5;
@@ -467,11 +467,13 @@
 
             document.getElementById('api-url-display').value = GAS_URL;
 
-            // Admin check
-            if (currentUser.email === "fernandomsc2002@gmail.com") {
-                document.getElementById('admin-panel').style.display = 'block';
-                document.getElementById('new-price').value = currentUser.price;
-                document.getElementById('limit-toggle').checked = currentUser.limitActive;
+            // Admin check - Now with strict enforcement
+            if (currentUser.email === adminEmail) {
+                document.getElementById('admin-card').style.display = 'block';
+                document.getElementById('new-price').value = currentUser.price || 10;
+                document.getElementById('limit-toggle').checked = currentUser.limitActive || false;
+            } else {
+                document.getElementById('admin-card').style.display = 'none';
             }
         }
 
