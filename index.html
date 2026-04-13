@@ -319,20 +319,25 @@
                 <div class="log-panel" style="margin-bottom: 2rem;">
                     <h3 style="margin-bottom: 1rem; color: var(--accent-cyan);">1. Download Worker</h3>
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
-                        To start posting, you need to run the Agent on your computer. This ensures your Facebook account stays safe.
+                        To start posting, you need to run the Agent on your computer. This ensures your Facebook account
+                        stays safe.
                     </p>
-                    <a href="https://github.com/fernandomsc2002/YOUR_REPO_NAME/archive/refs/heads/main.zip" 
-                       class="btn" style="background: var(--glass-bg); border: 1px solid var(--accent-cyan); color: var(--accent-cyan); text-decoration: none; display: block; text-align: center; margin-bottom: 1rem;">
+                    <a href="https://github.com/fernandomsc2002/YOUR_REPO_NAME/archive/refs/heads/main.zip" class="btn"
+                        style="background: var(--glass-bg); border: 1px solid var(--accent-cyan); color: var(--accent-cyan); text-decoration: none; display: block; text-align: center; margin-bottom: 1rem;">
                         📥 Download Python Agent (.zip)
                     </a>
-                    
+
                     <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-top: 1rem;">
                         <label style="font-size: 0.7rem; color: var(--accent-purple);">YOUR CLOUD API URL:</label>
                         <div style="display: flex; gap: 5px; margin-top: 5px;">
-                            <input type="text" id="api-url-display" readonly style="margin-bottom: 0; font-size: 0.7rem; height: 30px; padding: 5px;" value="Loading...">
-                            <button onclick="copyAPI()" style="padding: 0 10px; background: var(--accent-purple); border:none; border-radius: 4px; color: white; cursor: pointer; font-size: 0.7rem;">Copy</button>
+                            <input type="text" id="api-url-display" readonly
+                                style="margin-bottom: 0; font-size: 0.7rem; height: 30px; padding: 5px;"
+                                value="Loading...">
+                            <button onclick="copyAPI()"
+                                style="padding: 0 10px; background: var(--accent-purple); border:none; border-radius: 4px; color: white; cursor: pointer; font-size: 0.7rem;">Copy</button>
                         </div>
-                        <p style="font-size: 0.6rem; color: var(--text-muted); margin-top: 5px;">Paste this into your Local Agent app.</p>
+                        <p style="font-size: 0.6rem; color: var(--text-muted); margin-top: 5px;">Paste this into your
+                            Local Agent app.</p>
                     </div>
                 </div>
 
@@ -408,7 +413,7 @@
 
                 if (!res.ok) throw new Error("Connection failed");
                 const data = await res.json();
-                
+
                 // DATA SAFETY: Never allow undefined/NaN
                 currentUser = {
                     email: data.email || email,
@@ -434,7 +439,7 @@
         }
 
         function renderDashboard() {
-            if(!currentUser) return;
+            if (!currentUser) return;
             document.getElementById('auth-section').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
             document.getElementById('user-info').innerText = currentUser.email;
