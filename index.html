@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FB AutoPost SaaS | Production</title>
-    <!-- Google Fonts: Outfit -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -19,518 +17,196 @@
             --border: rgba(255, 255, 255, 0.08);
             --glass-bg: rgba(255, 255, 255, 0.03);
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Outfit', sans-serif;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
         body {
             background-color: var(--bg-dark);
             color: var(--text-pri);
-            overflow-x: hidden;
-            background-image:
-                radial-gradient(circle at 10% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(176, 110, 247, 0.05) 0%, transparent 40%);
+            background-image: radial-gradient(circle at 10% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(176, 110, 247, 0.05) 0%, transparent 40%);
             min-height: 100vh;
         }
-
-        /* Navbar */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 2rem 5%;
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 5%;
-        }
-
-        /* Hero / Login Section */
-        #auth-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 70vh;
-            text-align: center;
-        }
-
-        .glass-card {
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 3rem;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            font-weight: 800;
-        }
-
-        p.subtitle {
-            color: var(--text-muted);
-            margin-bottom: 2rem;
-        }
-
-        input {
-            width: 100%;
-            background: var(--glass-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 12px 16px;
-            color: white;
-            margin-bottom: 1.5rem;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.1);
-        }
-
-        .btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            font-size: 1rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-cyan), #00a3cc);
-            color: #080a0f;
-        }
-
-        .btn-primary:hover {
-            transform: scale(1.02);
-            filter: brightness(1.1);
-        }
-
-        /* Dashboard View */
-        #dashboard {
-            display: none;
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .stat-banner {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-item {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            padding: 1.5rem;
-            border-radius: 16px;
-            flex: 1;
-        }
-
-        .stat-val {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--accent-cyan);
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-        }
-
-        .config-panel,
-        .log-panel {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 2rem;
-        }
-
-        .pricing-tier {
-            background: linear-gradient(135deg, rgba(176, 110, 247, 0.1), rgba(0, 212, 255, 0.1));
-            border: 1px solid var(--accent-purple);
-            padding: 1.5rem;
-            border-radius: 16px;
-            margin-top: 2rem;
-            text-align: center;
-        }
-
-        .badge-paid {
-            color: var(--accent-green);
-            border: 1px solid var(--accent-green);
-            padding: 2px 8px;
-            border-radius: 100px;
-            font-size: 0.7rem;
-        }
-
-        .badge-free {
-            color: var(--accent-purple);
-            border: 1px solid var(--accent-purple);
-            padding: 2px 8px;
-            border-radius: 100px;
-            font-size: 0.7rem;
-        }
-
-        /* Payment Gateway Styling */
-        #payment-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .payment-card {
-            background: #1a1f2b;
-            padding: 3rem;
-            border-radius: 24px;
-            max-width: 400px;
-            width: 90%;
-            text-align: center;
-            border: 1px solid var(--accent-cyan);
-        }
-
-        @media (max-width: 768px) {
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem 5%; border-bottom: 1px solid var(--border); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; }
+        .logo { font-size: 1.5rem; font-weight: 800; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem 5%; }
+        .glass-card { background: var(--bg-card); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 24px; padding: 2.5rem; width: 100%; max-width: 450px; text-align: center; margin: 4rem auto; }
+        input { width: 100%; background: var(--glass-bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; color: white; margin-bottom: 1rem; font-size: 1rem; }
+        .btn { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 1rem; }
+        .btn-primary { background: var(--accent-cyan); color: #080a0f; }
+        .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.1); }
+        #dashboard { display: none; }
+        .stat-banner { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .stat-item { background: var(--bg-card); border: 1px solid var(--border); padding: 1.25rem; border-radius: 16px; text-align: center; }
+        .stat-val { font-size: 1.5rem; font-weight: 700; color: var(--accent-cyan); }
+        .stat-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
+        .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; }
+        .panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; }
+        .badge-paid { color: var(--accent-green); border: 1px solid var(--accent-green); padding: 2px 8px; border-radius: 100px; font-size: 0.7rem; }
+        .badge-free { color: var(--accent-purple); border: 1px solid var(--accent-purple); padding: 2px 8px; border-radius: 100px; font-size: 0.7rem; }
+        @media (max-width: 768px) { .dashboard-grid, .stat-banner { grid-template-columns: 1fr; } }
     </style>
 </head>
-
 <body>
-
     <nav>
         <div class="logo">FB AUTOPOST <span style="font-weight: 300;">PRO</span></div>
         <div id="user-info" style="font-size: 0.9rem; color: var(--text-muted);"></div>
     </nav>
 
     <div class="container">
-
-        <!-- Auth Section -->
+        <!-- Login Section -->
         <section id="auth-section">
             <div class="glass-card">
-                <h1>Welcome Back</h1>
-                <p class="subtitle">Log in to manage your automated campaigns</p>
+                <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">SaaS Dashboard</h1>
+                <p style="color: var(--text-muted); margin-bottom: 2rem;">Log in to manage your worker cloud</p>
                 <input type="email" id="email-input" placeholder="Enter your email" required>
                 <button class="btn btn-primary" onclick="login()">Access Dashboard</button>
             </div>
         </section>
 
-        <!-- Main Dashboard -->
+        <!-- Dashboard Section -->
         <section id="dashboard">
             <div class="stat-banner">
                 <div class="stat-item">
                     <div class="stat-label">Member Status</div>
-                    <div id="status-badge" class="stat-val">Loading...</div>
+                    <div id="status-badge" class="stat-val">--</div>
                 </div>
                 <div class="stat-item">
                     <div class="stat-label">Posts Remaining</div>
                     <div id="posts-left" class="stat-val">--</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-label">Current Pricing</div>
-                    <div id="current-price" class="stat-val">$10/mo</div>
+                    <div class="stat-label">Price</div>
+                    <div id="current-price" class="stat-val">--</div>
                 </div>
             </div>
 
             <div class="dashboard-grid">
-                <div class="config-panel">
-                    <h2 style="margin-bottom: 1.5rem;">Campaign Settings</h2>
-
-                    <label style="color: var(--text-muted); font-size: 0.9rem;">Facebook Target URL</label>
+                <div class="panel">
+                    <h2 style="margin-bottom: 1.5rem;">Campaign Configuration</h2>
+                    <label style="font-size: 0.8rem; color: var(--text-muted);">Target Page URL</label>
                     <input type="text" id="fb-url" value="https://www.facebook.com">
-
-                    <label style="color: var(--text-muted); font-size: 0.9rem;">Niche / Topic</label>
-                    <input type="text" id="niche" placeholder="e.g. fashion, beauty">
-
-                    <div style="display: flex; gap: 1rem;">
-                        <div style="flex: 1;">
-                            <label style="color: var(--text-muted); font-size: 0.9rem;">Groq API Key</label>
-                            <input type="password" id="groq-key" placeholder="gsk_...">
-                        </div>
-                        <div style="flex: 1;">
-                            <label style="color: var(--text-muted); font-size: 0.9rem;">Gemini API Key</label>
-                            <input type="password" id="gemini-key" placeholder="AIzaSy...">
-                        </div>
-                    </div>
-
-                    <button class="btn btn-primary" id="start-btn" onclick="triggerAgent()">🚀 Run Auto-Post
-                        Agent</button>
-                    <p id="agent-msg"
-                        style="margin-top: 1rem; font-size: 0.8rem; text-align: center; color: var(--accent-cyan);"></p>
+                    <label style="font-size: 0.8rem; color: var(--text-muted);">Niche</label>
+                    <input type="text" id="niche" placeholder="fashion, beauty...">
+                    <button class="btn btn-primary" id="start-btn" onclick="trigger()">🚀 Start Auto-Worker</button>
+                    <p id="agent-msg" style="margin-top:1rem; font-size:0.8rem; text-align:center; color:var(--accent-cyan);"></p>
                 </div>
 
-                <div class="log-panel" style="margin-bottom: 2rem;">
-                    <h3 style="margin-bottom: 1rem; color: var(--accent-cyan);">1. Download Worker</h3>
-                    <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
-                        To start posting, you need to run the Agent on your computer. This ensures your Facebook account
-                        stays safe.
-                    </p>
-                    <a href="https://github.com/fernandomsc2002/YOUR_REPO_NAME/archive/refs/heads/main.zip" class="btn"
-                        style="background: var(--glass-bg); border: 1px solid var(--accent-cyan); color: var(--accent-cyan); text-decoration: none; display: block; text-align: center; margin-bottom: 1rem;">
-                        📥 Download Python Agent (.zip)
-                    </a>
-
-                    <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-top: 1rem;">
-                        <label style="font-size: 0.7rem; color: var(--accent-purple);">YOUR CLOUD API URL:</label>
-                        <div style="display: flex; gap: 5px; margin-top: 5px;">
-                            <input type="text" id="api-url-display" readonly
-                                style="margin-bottom: 0; font-size: 0.7rem; height: 30px; padding: 5px;"
-                                value="Loading...">
-                            <button onclick="copyAPI()"
-                                style="padding: 0 10px; background: var(--accent-purple); border:none; border-radius: 4px; color: white; cursor: pointer; font-size: 0.7rem;">Copy</button>
+                <div class="panel-column">
+                    <div class="panel">
+                        <h3 style="color: var(--accent-cyan); margin-bottom: 1rem;">1. Sync Agent</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">Keep your Local Agent connected to this Cloud URL:</p>
+                        <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px;">
+                            <input type="text" id="api-url-display" readonly style="font-size: 0.7rem; height: 30px; margin-bottom: 5px;">
+                            <button class="btn" onclick="copyAPI()" style="background: var(--accent-purple); color:white; padding: 5px; font-size: 0.7rem;">Copy URL</button>
                         </div>
-                        <p style="font-size: 0.6rem; color: var(--text-muted); margin-top: 5px;">Paste this into your
-                            Local Agent app.</p>
-                    </div>
-                </div>
-
-                <div class="log-panel" id="billing-panel" style="display: none;">
-                    <h3 style="margin-bottom: 1rem;">2. Payment & Billing</h3>
-                    <div id="billing-info">
-                        <!-- Dynamic billing info -->
-                    </div>
-                </div>
-
-                <!-- 👑 GLOBAL OWNER CONTROLS (Only visible to you) -->
-                <div class="log-panel" id="admin-card"
-                    style="display: none; border: 1px solid var(--accent-cyan); margin-top: 1rem;">
-                    <h3 style="color: var(--accent-cyan); margin-bottom: 1rem;">👑 Owner Controls</h3>
-                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">Manage the SaaS
-                        settings for all users.</p>
-
-                    <label style="font-size: 0.8rem; color: var(--text-muted);">Monthly Subscription Price ($)</label>
-                    <input type="number" id="new-price" value="10">
-
-                    <div style="display:flex; align-items:center; gap:10px; margin: 15px 0;">
-                        <input type="checkbox" id="limit-toggle" style="width:auto; margin-bottom:0;">
-                        <label style="font-size:0.8rem; font-weight: 600;">Activate Paywall (5-Post Limit)</label>
                     </div>
 
-                    <button class="btn btn-primary" onclick="updatePrice()">Save Global Settings</button>
+                    <div class="panel" id="billing-panel" style="display: none; border-color: var(--accent-purple);">
+                        <h3 style="color: var(--accent-purple); margin-bottom: 1rem;">2. Upgrade Required</h3>
+                        <p style="font-size: 0.8rem;">You have reached your 5-post limit. Upgrade to Premium for unlimited access.</p>
+                        <button class="btn" style="background: var(--accent-green); color: #080a0f; margin-top: 1rem;">Upgrade Now</button>
+                    </div>
+
+                    <!-- 👑 ADMIN PANEL -->
+                    <div class="panel" id="admin-card" style="display: none; border: 1px solid var(--accent-cyan);">
+                        <h3 style="color: var(--accent-cyan); margin-bottom: 1rem;">👑 Owner Controls</h3>
+                        <label style="font-size: 0.8rem;">Set Monthly Price ($)</label>
+                        <input type="number" id="new-price" value="10">
+                        <div style="display:flex; align-items:center; gap:10px; margin: 15px 0;">
+                            <input type="checkbox" id="limit-toggle" style="width:auto; margin-bottom:0;">
+                            <label style="font-size:0.8rem;">Activate 5-Post Paywall</label>
+                        </div>
+                        <button class="btn btn-primary" onclick="updatePrice()">Save Global Settings</button>
+                    </div>
                 </div>
             </div>
-    </div>
-    </section>
-    </div>
-
-    <!-- Payment Modal -->
-    <div id="payment-modal">
-        <div class="payment-card">
-            <h2 style="color: var(--accent-cyan); margin-bottom: 1rem;">Upgrade to Pro</h2>
-            <p style="margin-bottom: 2rem; color: var(--text-muted);">Unlimited posts, vision-AI enabled, and priority
-                support for <span id="pay-amount">$10</span>/month.</p>
-
-            <div id="commercial-bank-container">
-                <!-- Direct Integration with Bank IPG would go here -->
-                <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 1rem;">Safe & Secure Payment via
-                    Commercial Bank Gateway</p>
-                <button class="btn btn-primary" onclick="processPayment()">Pay Now</button>
-            </div>
-
-            <button onclick="hidePayment()"
-                style="background:none; border:none; color: var(--text-muted); margin-top: 1rem; cursor:pointer;">Cancel</button>
-        </div>
+        </section>
     </div>
 
     <script>
         const GAS_URL = "https://script.google.com/macros/s/AKfycbwHhQxvzbMpx7VfGDF0oL3W0m4MsxQ2fUvw0zfs-Tp5T1kvWxAXYsVoLl3mI9zOWMwkyg/exec";
+        const OWNER = "fernandomsc2002@gmail.com";
         let currentUser = null;
 
         async function login() {
-            const emailInput = document.getElementById('email-input').value.trim().toLowerCase();
-            if (!emailInput) return alert("Please enter your email");
-
-            const btn = document.querySelector('.btn-primary');
-            const originalText = btn.innerText;
-            btn.innerText = "⏳ Authenticating...";
-            btn.disabled = true;
+            const email = document.getElementById('email-input').value.trim().toLowerCase();
+            if(!email) return alert("Email required");
             
-            try {
-                // Production-grade fetch optimized for Google Apps Script redirects
-                const res = await fetch(GAS_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ action: 'getUser', email: emailInput })
-                });
-                
-                if (!res.ok) throw new Error("Cloud connection rejected.");
-                const data = await res.json();
-                
-                // Admin Enforcement & Data Normalization
+            const btn = document.querySelector('#auth-section .btn-primary');
+            btn.innerText = "⏳ Connecting...";
+            btn.disabled = true;
+
+            // RACE LOGIC: Speed first
+            const fetchPromise = fetch(GAS_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain' },
+                body: JSON.stringify({ action: 'getUser', email: email })
+            }).then(r => r.json()).catch(e => null);
+
+            const timeoutPromise = new Promise(res => setTimeout(() => res('TIMEOUT'), 1500));
+            const result = await Promise.race([fetchPromise, timeoutPromise]);
+
+            if (result && result !== 'TIMEOUT') {
                 currentUser = {
-                    email: emailInput,
-                    postCount: parseInt(data.postCount) || 0,
-                    isPaid: data.isPaid === true || (emailInput === "fernandomsc2002@gmail.com"), 
-                    price: data.price || 10,
-                    limitActive: data.limitActive === true
+                    email: email,
+                    postCount: parseInt(result.postCount) || 0,
+                    isPaid: result.isPaid === true || email === OWNER,
+                    price: result.price || 10,
+                    limitActive: result.limitActive === true
                 };
-
-                renderDashboard();
-            } catch (e) {
-                console.warn("SaaS connection issue:", e.message);
-                
-                // SMART FALLBACK: Allow entry even if the cloud is blocked
-                currentUser = { 
-                    email: emailInput, 
-                    postCount: 0, 
-                    isPaid: (emailInput === "fernandomsc2002@gmail.com"), 
-                    price: 10, 
-                    limitActive: false 
-                };
-                
-                if (emailInput !== "fernandomsc2002@gmail.com") {
-                    console.info("Client entered via offline-sync fallback.");
-                }
-
-                renderDashboard();
-            } finally {
-                btn.innerText = "Access Dashboard";
-                btn.disabled = false;
+            } else {
+                // Fallback Mode
+                currentUser = { email: email, postCount: 0, isPaid: (email === OWNER), price: 10, limitActive: false };
             }
+            
+            showDashboard();
+            btn.innerText = "Access Dashboard";
+            btn.disabled = false;
         }
 
-        function renderDashboard() {
-            if (!currentUser) return;
-            const adminEmail = "fernandomsc2002@gmail.com";
-
+        function showDashboard() {
             document.getElementById('auth-section').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
             document.getElementById('user-info').innerText = currentUser.email;
 
-            // Status Badge
-            const statusBadge = document.getElementById('status-badge');
-            statusBadge.innerHTML = currentUser.isPaid ?
+            // UI Updates
+            document.getElementById('status-badge').innerHTML = currentUser.isPaid ? 
                 '<span class="badge-paid">PREMIUM</span>' : '<span class="badge-free">FREE TIER</span>';
-
-            // Posts Remaining
-            const remaining = currentUser.isPaid ? '∞' : Math.max(0, 5 - currentUser.postCount);
-            document.getElementById('posts-left').innerText = remaining;
-
-            // Pricing
+            const rem = currentUser.isPaid ? '∞' : Math.max(0, 5 - currentUser.postCount);
+            document.getElementById('posts-left').innerText = rem;
             document.getElementById('current-price').innerText = `$${currentUser.price}/mo`;
-            document.getElementById('pay-amount').innerText = `$${currentUser.price}`;
+            document.getElementById('api-url-display').value = GAS_URL;
+
+            // Admin Visibility
+            if (currentUser.email === OWNER) {
+                document.getElementById('admin-card').style.display = 'block';
+                document.getElementById('new-price').value = currentUser.price;
+                document.getElementById('limit-toggle').checked = currentUser.limitActive;
+            } else {
+                document.getElementById('admin-card').style.display = 'none';
+            }
 
             // Paywall logic
             if (currentUser.limitActive && !currentUser.isPaid && currentUser.postCount >= 5) {
+                document.getElementById('billing-panel').style.display = 'block';
                 document.getElementById('start-btn').disabled = true;
                 document.getElementById('start-btn').style.opacity = 0.5;
-                document.getElementById('billing-panel').style.display = 'block';
             } else {
+                document.getElementById('billing-panel').style.display = 'none';
                 document.getElementById('start-btn').disabled = false;
                 document.getElementById('start-btn').style.opacity = 1;
-                document.getElementById('billing-panel').style.display = 'none';
             }
-
-            document.getElementById('api-url-display').value = GAS_URL;
-
-            // THE FIX: Directly show admin card if email matches
-            const adminCard = document.getElementById('admin-card');
-            if (currentUser.email === adminEmail) {
-                adminCard.style.display = 'block';
-                document.getElementById('new-price').value = currentUser.price || 10;
-                document.getElementById('limit-toggle').checked = currentUser.limitActive || false;
-            } else {
-                adminCard.style.display = 'none';
-            }
-        }
-
-        function showPayment() { document.getElementById('payment-modal').style.display = 'flex'; }
-        function hidePayment() { document.getElementById('payment-modal').style.display = 'none'; }
-
-        async function processPayment() {
-            // Mock payment success for testing
-            alert("Redirecting to Commercial Bank IPG...");
-            // In production, you'd redirect to the bank session URL here
-
-            const txnId = "TXN_" + Math.random().toString(36).substr(2, 9);
-            const res = await fetch(GAS_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'updatePayment', email: currentUser.email, txnId: txnId })
-            });
-            alert("Payment successful! Account upgraded.");
-            location.reload();
         }
 
         async function updatePrice() {
             const price = document.getElementById('new-price').value;
-            const limitActive = document.getElementById('limit-toggle').checked;
-            await fetch(GAS_URL, {
-                method: 'POST',
-                body: JSON.stringify({ action: 'updateSettings', email: currentUser.email, price: price, limitActive: limitActive })
-            });
-            alert("Settings updated!");
+            const active = document.getElementById('limit-toggle').checked;
+            alert("Updating cloud settings...");
+            await fetch(GAS_URL, { method: 'POST', body: JSON.stringify({ action: 'updateSettings', email: OWNER, price: price, limitActive: active }) });
             location.reload();
         }
 
-        function triggerAgent() {
-            document.getElementById('agent-msg').innerText = "Signal sent. Open the 'main.py' application on your computer to start the posting process.";
-        }
-
-        function copyAPI() {
-            const copyText = document.getElementById("api-url-display");
-            copyText.select();
-            copyText.setSelectionRange(0, 99999);
-            document.execCommand("copy");
-            alert("API URL Copied to clipboard!");
-        }
+        function trigger() { document.getElementById('agent-msg').innerText = "Cloud signal sent. Open the .EXE Agent on your computer."; }
+        function copyAPI() { const c = document.getElementById("api-url-display"); c.select(); document.execCommand("copy"); alert("Copied!"); }
     </script>
 </body>
-
 </html>
