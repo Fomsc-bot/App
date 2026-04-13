@@ -1,0 +1,78 @@
+Here is a professional and clear **`README.md`** for your GitHub repository. You can copy and paste this directly into your repo to guide your clients.
+
+---
+
+# 🌐 FB AutoPost PRO: AI-Powered Group Poster (SaaS)
+
+Welcome to the ultimate solution for automated Facebook Group marketing. This tool uses **Vision AI** (Groq & Gemini) to generate viral captions based on your images and posts them automatically to your selected Facebook groups using your native Chrome browser.
+
+---
+
+## 🚀 Getting Started for Clients
+
+Follow these 4 simple steps to start your automated marketing campaign.
+
+### 1. Access the Dashboard
+Visit our official Web Dashboard to manage your account status and pricing:
+👉 **[YOUR-GITHUB-PAGES-URL-HERE]**
+
+*   Log in with your email to track your post usage.
+*   Check your member status (Free Tier or Premium).
+
+---
+
+### 2. Prepare Your Environment
+You need to have **Python** and **Google Chrome** installed on your computer.
+
+1.  **Install Python**: Download and install the latest version from [python.org](https://www.python.org/downloads/) (Make sure to check "Add Python to PATH" during installation).
+2.  **Download the Agent**: Download this repository as a ZIP file and extract it to a folder on your computer.
+
+---
+
+### 3. Install Requirements
+Open your **Terminal** or **PowerShell**, navigate to the extracted folder, and run:
+
+```bash
+pip install selenium webdriver-manager requests Pillow pyperclip
+```
+
+---
+
+### 4. Run the Agent & Sync
+Once the requirements are installed, launch the application:
+
+```bash
+python main.py
+```
+
+#### ⚙️ Configuration in the App:
+*   **Email**: Enter the same email you used on the website.
+*   **Cloud API URL**: Paste the API link provided on the dashboard (or contact support).
+*   **API Keys**: Enter your free [Groq](https://console.groq.com/) or [Gemini](https://aistudio.google.com/) keys.
+*   **Photos**: Select the folder on your computer containing the images you want to post.
+*   **Facebook Setup**: Ensure you are **already logged in to Facebook** in your normal Google Chrome browser.
+
+---
+
+## 💎 Features & Benefits
+*   **Vision AI Integration**: High-end AI analyzes your photos and writes captions that actually convert.
+*   **Duplicate Prevention**: Remembers what you've already posted to keep your feed fresh.
+*   **Safe Posting**: Runs from your own local machine and IP address, making it 100% safe from Facebook's anti-bot detection.
+*   **Randomized Delays**: Simulates human behavior between posts to protect your account.
+
+---
+
+## 💰 Subscription & Limits
+*   **Free Tier**: Post up to **5 high-quality posts** for free.
+*   **Premium Tier**: Unlock **unlimited posting**, priority AI generation, and lifetime support. 
+*   *Payments are currently processed via our secure Bank Gateway (See dashboard for details).*
+
+---
+
+## 📞 Support
+If you have any issues, please contact the developer:
+**Email**: fernandomsc2002@gmail.com
+**Developer**: [Your Name/Brand]
+
+---
+*Disclaimer: This tool is for educational and legal marketing purposes only. Use it responsibly and follow Facebook’s Community Standards.*
