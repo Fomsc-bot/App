@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FB AutoPost SaaS | Production</title>
+    <!-- Google Fonts: Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #080a0f;
+            --bg-card: rgba(22, 26, 35, 0.7);
+            --accent-cyan: #00d4ff;
+            --accent-purple: #b06ef7;
+            --accent-green: #00e5a0;
+            --text-pri: #eaedf5;
+            --text-muted: #6b7390;
+            --border: rgba(255, 255, 255, 0.08);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-pri);
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(176, 110, 247, 0.05) 0%, transparent 40%);
+            min-height: 100vh;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 5%;
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 5%;
+        }
+
+        /* Hero / Login Section */
+        #auth-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+            text-align: center;
+        }
+
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 { font-size: 2.5rem; margin-bottom: 1rem; font-weight: 800; }
+        p.subtitle { color: var(--text-muted); margin-bottom: 2rem; }
+
+        input {
+            width: 100%;
+            background: var(--glass-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: white;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 4px rgba(0, 212, 255, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-cyan), #00a3cc);
+            color: #080a0f;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.02);
+            filter: brightness(1.1);
+        }
+
+        /* Dashboard View */
+        #dashboard {
+            display: none;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-banner {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 16px;
+            flex: 1;
+        }
+
+        .stat-val { font-size: 1.5rem; font-weight: 700; color: var(--accent-cyan); }
+        .stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; }
+
+        .config-panel, .log-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .pricing-tier {
+            background: linear-gradient(135deg, rgba(176, 110, 247, 0.1), rgba(0, 212, 255, 0.1));
+            border: 1px solid var(--accent-purple);
+            padding: 1.5rem;
+            border-radius: 16px;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .badge-paid { color: var(--accent-green); border: 1px solid var(--accent-green); padding: 2px 8px; border-radius: 100px; font-size: 0.7rem; }
+        .badge-free { color: var(--accent-purple); border: 1px solid var(--accent-purple); padding: 2px 8px; border-radius: 100px; font-size: 0.7rem; }
+
+        /* Payment Gateway Styling */
+        #payment-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .payment-card {
+            background: #1a1f2b;
+            padding: 3rem;
+            border-radius: 24px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid var(--accent-cyan);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">FB AUTOPOST <span style="font-weight: 300;">PRO</span></div>
+        <div id="user-info" style="font-size: 0.9rem; color: var(--text-muted);"></div>
+    </nav>
+
+    <div class="container">
+        
+        <!-- Auth Section -->
+        <section id="auth-section">
+            <div class="glass-card">
+                <h1>Welcome Back</h1>
+                <p class="subtitle">Log in to manage your automated campaigns</p>
+                <input type="email" id="email-input" placeholder="Enter your email" required>
+                <button class="btn btn-primary" onclick="login()">Access Dashboard</button>
+            </div>
+        </section>
+
+        <!-- Main Dashboard -->
+        <section id="dashboard">
+            <div class="stat-banner">
+                <div class="stat-item">
+                    <div class="stat-label">Member Status</div>
+                    <div id="status-badge" class="stat-val">Loading...</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Posts Remaining</div>
+                    <div id="posts-left" class="stat-val">--</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Current Pricing</div>
+                    <div id="current-price" class="stat-val">$10/mo</div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="config-panel">
+                    <h2 style="margin-bottom: 1.5rem;">Campaign Settings</h2>
+                    
+                    <label style="color: var(--text-muted); font-size: 0.9rem;">Facebook Target URL</label>
+                    <input type="text" id="fb-url" value="https://www.facebook.com">
+
+                    <label style="color: var(--text-muted); font-size: 0.9rem;">Niche / Topic</label>
+                    <input type="text" id="niche" placeholder="e.g. fashion, beauty">
+
+                    <div style="display: flex; gap: 1rem;">
+                        <div style="flex: 1;">
+                            <label style="color: var(--text-muted); font-size: 0.9rem;">Groq API Key</label>
+                            <input type="password" id="groq-key" placeholder="gsk_...">
+                        </div>
+                        <div style="flex: 1;">
+                            <label style="color: var(--text-muted); font-size: 0.9rem;">Gemini API Key</label>
+                            <input type="password" id="gemini-key" placeholder="AIzaSy...">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" id="start-btn" onclick="triggerAgent()">🚀 Run Auto-Post Agent</button>
+                    <p id="agent-msg" style="margin-top: 1rem; font-size: 0.8rem; text-align: center; color: var(--accent-cyan);"></p>
+                </div>
+
+                <div class="log-panel">
+                    <h3 style="margin-bottom: 1rem;">Payment & Billing</h3>
+                    <div id="billing-info">
+                        <!-- Dynamic billing info -->
+                    </div>
+                    <div id="pay-button-container" style="display: none;">
+                        <p style="font-size: 0.8rem; margin-bottom: 1rem; color: var(--text-muted);">You've used your free posts. Upgrade to continue.</p>
+                        <button class="btn" style="background: var(--accent-purple); color: white;" onclick="showPayment()">Upgrade to Premium</button>
+                    </div>
+
+                    <div id="admin-panel" style="display: none; margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+                        <h3 style="color: var(--accent-cyan);">Admin Controls</h3>
+                        <label>Monthly Price ($)</label>
+                        <input type="number" id="new-price" value="10">
+                        <button class="btn btn-primary" onclick="updatePrice()">Update Price</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Payment Modal -->
+    <div id="payment-modal">
+        <div class="payment-card">
+            <h2 style="color: var(--accent-cyan); margin-bottom: 1rem;">Upgrade to Pro</h2>
+            <p style="margin-bottom: 2rem; color: var(--text-muted);">Unlimited posts, vision-AI enabled, and priority support for <span id="pay-amount">$10</span>/month.</p>
+            
+            <div id="commercial-bank-container">
+                <!-- Direct Integration with Bank IPG would go here -->
+                <p style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 1rem;">Safe & Secure Payment via Commercial Bank Gateway</p>
+                <button class="btn btn-primary" onclick="processPayment()">Pay Now</button>
+            </div>
+            
+            <button onclick="hidePayment()" style="background:none; border:none; color: var(--text-muted); margin-top: 1rem; cursor:pointer;">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        // REPLACE THIS URL WITH YOUR DEPLOYED WEB APP URL
+        const GAS_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+        let currentUser = null;
+
+        async function login() {
+            const email = document.getElementById('email-input').value;
+            if(!email) return alert("Enter email");
+            
+            document.querySelector('.btn-primary').innerText = "Connecting...";
+            
+            try {
+                const res = await fetch(GAS_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'getUser', email: email })
+                });
+                const data = await res.json();
+                currentUser = data;
+                renderDashboard();
+            } catch(e) {
+                // For demonstration, mock the login if URL not set
+                alert("Backend not connected. Follow instructions to set up GAS URL.");
+                currentUser = { email: email, postCount: 2, isPaid: false, price: 10 };
+                renderDashboard();
+            }
+        }
+
+        function renderDashboard() {
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('user-info').innerText = currentUser.email;
+            
+            document.getElementById('status-badge').innerHTML = currentUser.isPaid ? 
+                '<span class="badge-paid">PREMIUM</span>' : '<span class="badge-free">FREE TIER</span>';
+            
+            const remaining = currentUser.isPaid ? '∞' : (5 - currentUser.postCount);
+            document.getElementById('posts-left').innerText = remaining;
+            document.getElementById('current-price').innerText = `$${currentUser.price}/mo`;
+            document.getElementById('pay-amount').innerText = `$${currentUser.price}`;
+
+            if (!currentUser.isPaid && currentUser.postCount >= 5) {
+                document.getElementById('start-btn').disabled = true;
+                document.getElementById('start-btn').style.opacity = 0.5;
+                document.getElementById('pay-button-container').style.display = 'block';
+            }
+
+            // Admin check
+            if (currentUser.email === "fernandomsc2002@gmail.com") {
+                document.getElementById('admin-panel').style.display = 'block';
+            }
+        }
+
+        function showPayment() { document.getElementById('payment-modal').style.display = 'flex'; }
+        function hidePayment() { document.getElementById('payment-modal').style.display = 'none'; }
+
+        async function processPayment() {
+            // Mock payment success for testing
+            alert("Redirecting to Commercial Bank IPG...");
+            // In production, you'd redirect to the bank session URL here
+            
+            const txnId = "TXN_" + Math.random().toString(36).substr(2, 9);
+            const res = await fetch(GAS_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'updatePayment', email: currentUser.email, txnId: txnId })
+            });
+            alert("Payment successful! Account upgraded.");
+            location.reload();
+        }
+
+        async function updatePrice() {
+            const price = document.getElementById('new-price').value;
+            await fetch(GAS_URL, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'setPricing', email: currentUser.email, price: price })
+            });
+            alert("Price updated to $" + price);
+            location.reload();
+        }
+
+        function triggerAgent() {
+            document.getElementById('agent-msg').innerText = "Agent requested. Waiting for Local Worker to sync...";
+            // This would send a signal to the backend that the worker reads
+        }
+    </script>
+</body>
+</html>
