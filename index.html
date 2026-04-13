@@ -269,14 +269,14 @@
                     <p id="agent-msg" style="margin-top: 1rem; font-size: 0.8rem; text-align: center; color: var(--accent-cyan);"></p>
                 </div>
 
-                <div class="log-panel">
+                <div class="log-panel" id="billing-panel" style="display: none;">
                     <h3 style="margin-bottom: 1rem;">Payment & Billing</h3>
                     <div id="billing-info">
                         <!-- Dynamic billing info -->
                     </div>
                     <div id="pay-button-container" style="display: none;">
                         <p style="font-size: 0.8rem; margin-bottom: 1rem; color: var(--text-muted);">You've used your free posts. Upgrade to continue.</p>
-                        <button class="btn" style="background: var(--accent-purple); color: white;" onclick="showPayment()">Upgrade to Premium</button>
+                        <!-- <button class="btn" style="background: var(--accent-purple); color: white;" onclick="showPayment()">Upgrade to Premium</button> -->
                     </div>
 
                     <div id="admin-panel" style="display: none; margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1rem;">
@@ -308,7 +308,7 @@
 
     <script>
         // REPLACE THIS URL WITH YOUR DEPLOYED WEB APP URL
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxgtvFOi7MSI0ga7xbF7cL8_aF_WoQRAhXmlp-1PGtCJTZ0SqNQ_nkdZ2aVrnQqPsgJ/exec";
+        const GAS_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
         let currentUser = null;
 
         async function login() {
@@ -346,11 +346,14 @@
             document.getElementById('current-price').innerText = `$${currentUser.price}/mo`;
             document.getElementById('pay-amount').innerText = `$${currentUser.price}`;
 
+            // Payment restrictions removed for now
+            /*
             if (!currentUser.isPaid && currentUser.postCount >= 5) {
                 document.getElementById('start-btn').disabled = true;
                 document.getElementById('start-btn').style.opacity = 0.5;
                 document.getElementById('pay-button-container').style.display = 'block';
             }
+            */
 
             // Admin check
             if (currentUser.email === "fernandomsc2002@gmail.com") {
@@ -392,3 +395,4 @@
     </script>
 </body>
 </html>
+
