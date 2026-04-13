@@ -393,50 +393,39 @@
 
             const btn = document.querySelector('.btn-primary');
             const originalText = btn.innerText;
-            btn.innerText = "⏳ Connecting to Cloud...";
+            btn.innerText = "⏳ Connecting...";
             btn.disabled = true;
 
             try {
-                // If the user hasn't set the URL yet, don't even try to fetch
                 if (GAS_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) {
-                    throw new Error("GAS_URL_NOT_SET");
+                    throw new Error("URL_NOT_SET");
                 }
 
                 const res = await fetch(GAS_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // Optional: depending on GAS configuration
                     body: JSON.stringify({ action: 'getUser', email: email })
                 });
+
+                if (!res.ok) throw new Error("Connection failed");
+                const data = await res.json();
                 
-                // Note: GAS POST returns opaque response in 'no-cors'. 
-                // Using standard fetch for JSON responses:
-                const resNormal = await fetch(GAS_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'getUser', email: email })
-                });
-                const data = await resNormal.json();
-                
-                currentUser = data;
+                // DATA SAFETY: Never allow undefined/NaN
+                currentUser = {
+                    email: data.email || email,
+                    postCount: parseInt(data.postCount) || 0,
+                    isPaid: data.isPaid === true,
+                    price: data.price || 10,
+                    limitActive: data.limitActive === true
+                };
+
                 renderDashboard();
             } catch (e) {
-                console.error("Login Error:", e);
-                
-                if (e.message === "GAS_URL_NOT_SET") {
-                    alert("⚠️ Action Required: You must paste your Google Apps Script URL at the bottom of the index.html file.");
-                } else {
-                    alert("⚠️ Cloud Connection Error. Verify your GAS URL is correct and deployed as 'Anyone'.");
-                }
-
-                // OWNER FALLBACK (For testing/UI setup)
+                console.warn("Using offline mode due to:", e.message);
                 if (email === "fernandomsc2002@gmail.com") {
-                    currentUser = { 
-                        email: email, 
-                        postCount: 0, 
-                        isPaid: true, 
-                        price: 15, 
-                        limitActive: false 
-                    };
+                    currentUser = { email: email, postCount: 0, isPaid: true, price: 10, limitActive: false };
                     renderDashboard();
+                } else {
+                    alert("⚠️ Cloud Connection Error. Please verify your GAS URL is correct.");
                 }
             } finally {
                 btn.innerText = originalText;
@@ -445,6 +434,7 @@
         }
 
         function renderDashboard() {
+            if(!currentUser) return;
             document.getElementById('auth-section').style.display = 'none';
             document.getElementById('dashboard').style.display = 'block';
             document.getElementById('user-info').innerText = currentUser.email;
@@ -452,11 +442,12 @@
             document.getElementById('status-badge').innerHTML = currentUser.isPaid ?
                 '<span class="badge-paid">PREMIUM</span>' : '<span class="badge-free">FREE TIER</span>';
 
-            const remaining = currentUser.isPaid ? '∞' : (5 - currentUser.postCount);
+            const remaining = currentUser.isPaid ? '∞' : Math.max(0, 5 - currentUser.postCount);
             document.getElementById('posts-left').innerText = remaining;
             document.getElementById('current-price').innerText = `$${currentUser.price}/mo`;
             document.getElementById('pay-amount').innerText = `$${currentUser.price}`;
 
+            // Handle Paywall Visibility
             if (currentUser.limitActive && !currentUser.isPaid && currentUser.postCount >= 5) {
                 document.getElementById('start-btn').disabled = true;
                 document.getElementById('start-btn').style.opacity = 0.5;
