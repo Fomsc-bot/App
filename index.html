@@ -352,7 +352,11 @@
                         <h3 style="color: var(--accent-cyan);">Admin Controls</h3>
                         <label>Monthly Price ($)</label>
                         <input type="number" id="new-price" value="10">
-                        <button class="btn btn-primary" onclick="updatePrice()">Update Price</button>
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
+                            <input type="checkbox" id="limit-toggle" style="width:auto; margin-bottom:0;">
+                            <label style="font-size:0.8rem;">Activate 5-Post Limit (Paywall)</label>
+                        </div>
+                        <button class="btn btn-primary" onclick="updatePrice()">Save Global Settings</button>
                     </div>
                 </div>
             </div>
@@ -380,7 +384,7 @@
 
     <script>
         // REPLACE THIS URL WITH YOUR DEPLOYED WEB APP URL
-        const GAS_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycby_4lwOISAphyMSgk3Ti6GA1pO701myK4q-cvr2xOY8d1POpYFOiEyEP2nE5UXrD8fVvw/exec";
         let currentUser = null;
 
         async function login() {
@@ -418,20 +422,25 @@
             document.getElementById('current-price').innerText = `$${currentUser.price}/mo`;
             document.getElementById('pay-amount').innerText = `$${currentUser.price}`;
 
-            // Payment restrictions removed for now
-            /*
-            if (!currentUser.isPaid && currentUser.postCount >= 5) {
+            if (currentUser.limitActive && !currentUser.isPaid && currentUser.postCount >= 5) {
                 document.getElementById('start-btn').disabled = true;
                 document.getElementById('start-btn').style.opacity = 0.5;
                 document.getElementById('pay-button-container').style.display = 'block';
+                document.getElementById('billing-panel').style.display = 'block';
+            } else {
+                document.getElementById('start-btn').disabled = false;
+                document.getElementById('start-btn').style.opacity = 1;
+                document.getElementById('pay-button-container').style.display = 'none';
+                document.getElementById('billing-panel').style.display = 'none';
             }
-            */
 
             document.getElementById('api-url-display').value = GAS_URL;
 
             // Admin check
             if (currentUser.email === "fernandomsc2002@gmail.com") {
                 document.getElementById('admin-panel').style.display = 'block';
+                document.getElementById('new-price').value = currentUser.price;
+                document.getElementById('limit-toggle').checked = currentUser.limitActive;
             }
         }
 
@@ -454,11 +463,12 @@
 
         async function updatePrice() {
             const price = document.getElementById('new-price').value;
+            const limitActive = document.getElementById('limit-toggle').checked;
             await fetch(GAS_URL, {
                 method: 'POST',
-                body: JSON.stringify({ action: 'setPricing', email: currentUser.email, price: price })
+                body: JSON.stringify({ action: 'updateSettings', email: currentUser.email, price: price, limitActive: limitActive })
             });
-            alert("Price updated to $" + price);
+            alert("Settings updated!");
             location.reload();
         }
 
