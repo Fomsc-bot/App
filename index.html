@@ -321,9 +321,9 @@
                     <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem;">
                         To start posting, you need to run the Agent on your computer. This ensures your Facebook account stays safe.
                     </p>
-                    <a href="https://drive.google.com/file/d/1q87BciKpdrPhVuziL3Y0RQJzSy-gqi-I/view?usp=sharing" 
+                    <a href="https://github.com/fernandomsc2002/YOUR_REPO_NAME/archive/refs/heads/main.zip" 
                        class="btn" style="background: var(--glass-bg); border: 1px solid var(--accent-cyan); color: var(--accent-cyan); text-decoration: none; display: block; text-align: center; margin-bottom: 1rem;">
-                        📥 Download Python Agent (.exe)
+                        📥 Download Python Agent (.zip)
                     </a>
                     
                     <div style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-top: 1rem;">
@@ -384,28 +384,63 @@
 
     <script>
         // REPLACE THIS URL WITH YOUR DEPLOYED WEB APP URL
-        const GAS_URL = "https://script.google.com/macros/s/AKfycby_4lwOISAphyMSgk3Ti6GA1pO701myK4q-cvr2xOY8d1POpYFOiEyEP2nE5UXrD8fVvw/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxhsR56vewyklQDYfDXsftmYTxkordNQYaCDv7rMho4LHfWuydeN91cG1sNOkJkNbTX_A/exec";
         let currentUser = null;
 
         async function login() {
             const email = document.getElementById('email-input').value;
-            if (!email) return alert("Enter email");
+            if (!email) return alert("Enter email address");
 
-            document.querySelector('.btn-primary').innerText = "Connecting...";
+            const btn = document.querySelector('.btn-primary');
+            const originalText = btn.innerText;
+            btn.innerText = "⏳ Connecting to Cloud...";
+            btn.disabled = true;
 
             try {
+                // If the user hasn't set the URL yet, don't even try to fetch
+                if (GAS_URL.includes("YOUR_GOOGLE_APPS_SCRIPT")) {
+                    throw new Error("GAS_URL_NOT_SET");
+                }
+
                 const res = await fetch(GAS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // Optional: depending on GAS configuration
+                    body: JSON.stringify({ action: 'getUser', email: email })
+                });
+                
+                // Note: GAS POST returns opaque response in 'no-cors'. 
+                // Using standard fetch for JSON responses:
+                const resNormal = await fetch(GAS_URL, {
                     method: 'POST',
                     body: JSON.stringify({ action: 'getUser', email: email })
                 });
-                const data = await res.json();
+                const data = await resNormal.json();
+                
                 currentUser = data;
                 renderDashboard();
             } catch (e) {
-                // For demonstration, mock the login if URL not set
-                alert("Backend not connected. Follow instructions to set up GAS URL.");
-                currentUser = { email: email, postCount: 2, isPaid: false, price: 10 };
-                renderDashboard();
+                console.error("Login Error:", e);
+                
+                if (e.message === "GAS_URL_NOT_SET") {
+                    alert("⚠️ Action Required: You must paste your Google Apps Script URL at the bottom of the index.html file.");
+                } else {
+                    alert("⚠️ Cloud Connection Error. Verify your GAS URL is correct and deployed as 'Anyone'.");
+                }
+
+                // OWNER FALLBACK (For testing/UI setup)
+                if (email === "fernandomsc2002@gmail.com") {
+                    currentUser = { 
+                        email: email, 
+                        postCount: 0, 
+                        isPaid: true, 
+                        price: 15, 
+                        limitActive: false 
+                    };
+                    renderDashboard();
+                }
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
             }
         }
 
