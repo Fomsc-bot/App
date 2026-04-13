@@ -340,30 +340,30 @@
                             Local Agent app.</p>
                     </div>
                 </div>
-
+                
                 <div class="log-panel" id="billing-panel" style="display: none;">
                     <h3 style="margin-bottom: 1rem;">2. Payment & Billing</h3>
                     <div id="billing-info">
                         <!-- Dynamic billing info -->
                     </div>
-                    <div id="pay-button-container" style="display: none;">
-                        <p style="font-size: 0.8rem; margin-bottom: 1rem; color: var(--text-muted);">You've used your
-                            free posts. Upgrade to continue.</p>
-                        <!-- <button class="btn" style="background: var(--accent-purple); color: white;" onclick="showPayment()">Upgrade to Premium</button> -->
-                    </div>
-
-                    <div id="admin-panel"
-                        style="display: none; margin-top: 2rem; border-top: 1px solid var(--border); padding-top: 1rem;">
-                        <h3 style="color: var(--accent-cyan);">Admin Controls</h3>
-                        <label>Monthly Price ($)</label>
-                        <input type="number" id="new-price" value="10">
-                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:15px;">
-                            <input type="checkbox" id="limit-toggle" style="width:auto; margin-bottom:0;">
-                            <label style="font-size:0.8rem;">Activate 5-Post Limit (Paywall)</label>
-                        </div>
-                        <button class="btn btn-primary" onclick="updatePrice()">Save Global Settings</button>
-                    </div>
                 </div>
+
+                <!-- 👑 GLOBAL OWNER CONTROLS (Only visible to you) -->
+                <div class="log-panel" id="admin-card" style="display: none; border: 1px solid var(--accent-cyan); margin-top: 1rem;">
+                    <h3 style="color: var(--accent-cyan); margin-bottom: 1rem;">👑 Owner Controls</h3>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">Manage the SaaS settings for all users.</p>
+                    
+                    <label style="font-size: 0.8rem; color: var(--text-muted);">Monthly Subscription Price ($)</label>
+                    <input type="number" id="new-price" value="10">
+                    
+                    <div style="display:flex; align-items:center; gap:10px; margin: 15px 0;">
+                        <input type="checkbox" id="limit-toggle" style="width:auto; margin-bottom:0;">
+                        <label style="font-size:0.8rem; font-weight: 600;">Activate Paywall (5-Post Limit)</label>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="updatePrice()">Save Global Settings</button>
+                </div>
+            </div>
             </div>
         </section>
     </div>
